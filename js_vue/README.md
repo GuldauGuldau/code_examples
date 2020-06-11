@@ -1,2 +1,2 @@
 Конструктор страниц
-![Конструктор страниц](http://joxi.ru/p27GMKjCWwwJo2)
+![Конструктор страниц](preview.jpg?raw=true "Title")
