@@ -1,0 +1,206 @@
+{{ header }}
+
+<header class="yn_header">
+  <div class="yn_container">
+  <div class="yn__row">
+     <div class="yn_logo"><img src="catalog/view/theme/ym/image/logo.svg" alt="логотип"></div>
+    <div>
+    <a href="{{ network_link }}" class="nt_link">
+      <svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g transform="translate(-292.000000, -19.000000)" fill="#FFFFFF" fill-rule="nonzero" class="nt_svg">
+                <path d="M341.750521,43.9776042 C341.750521,57.5765625 330.730208,68.6052083 317.124479,68.6052083 C303.533333,68.6052083 292.505208,57.5765625 292.505208,43.9776042 C292.505208,30.3880208 303.533333,19.359375 317.124479,19.359375 C330.730208,19.3588542 341.750521,30.3880208 341.750521,43.9776042 Z M311.930208,46.0614583 L320.280729,52.1505208 C319.045312,54.6890625 320.111458,57.7458333 322.657812,58.9807292 C325.196875,60.2 328.252604,59.1427083 329.479687,56.6036458 C330.707292,54.05625 329.649479,51.0005208 327.110417,49.7739583 C325.189062,48.8479167 322.896875,49.2104167 321.352604,50.6760417 L313.010417,44.5875 C313.705208,43.2447917 313.874479,41.69375 313.48125,40.2354167 L322.109896,36.4463542 C323.352604,38.0364583 325.651562,38.30625 327.234375,37.0640625 C328.824479,35.8135417 329.101042,33.5213542 327.852083,31.9317708 C326.608854,30.3494792 324.309896,30.071875 322.727083,31.321875 C321.678125,32.1401042 321.167708,33.4677083 321.376562,34.7796875 L312.747917,38.5609375 C310.957812,35.7286458 307.222396,34.903125 304.397917,36.6854167 C301.573437,38.4838542 300.739583,42.2114583 302.530208,45.0427083 C304.313542,47.8526042 308.056771,48.6932292 310.873958,46.9104167 C311.259375,46.6713542 311.613542,46.378125 311.930208,46.0614583 Z" id="Shape"></path>
+            </g>
+        </g>
+      </svg>
+
+      {% if not auth %}
+        <div class="nt_plus">
+          <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-336.000000, -20.000000)" fill="#FFFFFF">
+                    <polygon points="343.176426 27.340361 343.176426 31.9535456 341.045574 31.9535456 341.045574 27.340361 336.696 27.340361 336.696 25.4511521 341.045574 25.4511521 341.045574 20.816 343.176426 20.816 343.176426 25.4511521 347.526 25.4511521 347.526 27.340361"></polygon>
+                </g>
+            </g>
+          </svg>
+        </div>
+      {% else %}
+        <div class="nt_plus">
+          {{ count_contacts }}
+        </div>
+      {% endif %}
+    </a>
+    </div>
+  </div>
+    <div class="nt-row">
+      <div class="nt-title1">Вопросы</div>
+      <div class="nt-see">
+        <a href="{{ quiz_link }}" class="nt-link">Опросы</a>
+        <div class="nt_plus">
+          {{ count_quiz }}
+        </div>
+      </div>
+    </div>
+
+    <div class="yn__top">
+      <svg width="18px" height="28px" viewBox="0 0 10 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g class="yn__top-fill" transform="translate(-281.000000, -85.000000)" fill="#FFFFFF" fill-rule="nonzero">
+          <g transform="translate(281.000000, 85.000000)">
+            <path d="M0.0714285714,7.08928571 L4.28571429,7.08928571 L4.28571429,16.2857143 L5.71428571,16.2857143 L5.71428571,7.08928571 L9.94642857,7.08928571 L5,0.142857143 L0.0714285714,7.08928571 Z M2.83928571,5.66071429 L5,2.60714286 L7.16071429,5.66071429 L2.83928571,5.66071429 Z" ></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+    </div>
+  </div>
+</header>
+<main class="yn_content yn_qs__content">
+  <div class="yn_container">
+
+    {% if questions %}
+
+      {% for question in questions %}
+      <div class="yn_qs" data-id="{{ question.id }}">
+        <div class="yn_qs__text">{{ question.name }}</div>
+        <div class="yn_qs__footer">
+          <div class="yn_qs__feedback yn_qs__alike" onclick="addLike(this)">
+            {% if question.current_like %}
+             <img src="catalog/view/theme/ym/image/like_action.svg" alt="" class="yn_qs__like action_like">
+            {% else %}
+              <img src="catalog/view/theme/ym/image/yellow_like.svg" alt="" class="yn_qs__like">
+            {% endif %}
+
+            <div class="yn_qs__counter">{{ question.like }}</div>
+          </div>
+
+          <div class="yn_qs__feedback yn_qs__dislike" onclick="addDislike(this)">
+            {% if question.current_dislike %}
+              <img src="catalog/view/theme/ym/image/dislike_action.svg" alt="" class="action_dislike">
+            {% else %}
+                <img src="catalog/view/theme/ym/image/yellow_dislike.svg" alt="">
+            {% endif %}
+            <div class="yn_qs__counter">{{ question.dislike }}</div>
+          </div>
+        </div>
+      </div>
+
+      {% if question.comments %}
+
+        <div class="comments">
+
+          {% for comment in question.comments %}
+            <div class="comment">
+              <span>{{ comment.name }}:</span>
+
+              <div class="comment__text">{{ comment.text }}</div>
+
+            </div>
+          {% endfor %}
+        </div>
+
+      {% endif %}
+      {% endfor %}
+
+    {% endif %}
+
+  </div>
+
+  <div class="yn_action">
+
+    <div class="yn_form">
+    <svg class="yn_form__close" width="15px" height="15px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-1517.000000, -39.000000)" fill="#FFFFFF" class="menu_container__fill"><path d="M1525.64706,51.3529412 L1515,51.3529412 L1515,47.6470588 L1525.64706,47.6470588 L1525.64706,37 L1529.35294,37 L1529.35294,47.6470588 L1540,47.6470588 L1540,51.3529412 L1529.35294,51.3529412 L1529.35294,62 L1525.64706,62 L1525.64706,51.3529412 Z"  transform="translate(1527.500000, 49.500000) rotate(45.000000) translate(-1527.500000, -49.500000) "></path></g></g></svg>
+      <header class="yn_header yn_qs_hd">
+        <div class="yn_container">
+          <div class="yn_logo"><img src="catalog/view/theme/ym/image/logo.svg" alt="логотип"></div>
+          <h1>Задать вопрос</h1>
+        </div>
+      </header>
+
+      <div class="yn_form__content">
+        <div class="yn_container">
+          <form action="{{ action}}" method="post" enctype="multipart/form-data">
+            <textarea class="yn_form__textarea" name="name" placeholder="Введите текст" required></textarea>
+            <button type="submit" class="yn_comment__button">Отправить</button>
+          </form>
+          <div class="yn_form__note">Ваш вопрос появится внизу ленты</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="yn_footer__wrap">
+    <div class="yn_action__qs">
+    <svg width="23px" height="22px" viewBox="0 0 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g transform="translate(-692.000000, -1071.000000)" fill="#FFFFFF" fill-rule="nonzero">
+              <path d="M713.951215,1071 L693.053418,1071 C692.473813,1071 692,1071.47379 692,1072.05339 L692,1086.77799 C692,1087.3576 692.473813,1087.82678 693.053418,1087.82678 L695.279802,1087.82678 L695.279802,1092.19678 C695.279802,1092.3854 695.394802,1092.55099 695.565,1092.62458 C695.620198,1092.6476 695.68,1092.65678 695.739802,1092.65678 C695.859407,1092.65678 695.979011,1092.61079 696.066412,1092.52339 L700.758418,1087.82678 L713.951215,1087.82678 C714.530791,1087.82678 715,1087.3576 715,1086.77799 L715,1072.05339 C715,1071.47379 714.530791,1071 713.951215,1071 Z M698.002994,1081.40059 C696.908192,1081.40059 696.015791,1080.50819 696.015791,1079.41799 C696.015791,1078.32319 696.908192,1077.43079 698.002994,1077.43079 C699.093192,1077.43079 699.985593,1078.32319 699.985593,1079.41799 C699.985593,1080.50819 699.093192,1081.40059 698.002994,1081.40059 Z M703.5,1081.40059 C702.409802,1081.40059 701.517401,1080.50819 701.517401,1079.41799 C701.517401,1078.32319 702.409802,1077.43079 703.5,1077.43079 C704.594802,1077.43079 705.482599,1078.32319 705.482599,1079.41799 C705.482599,1080.50819 704.594802,1081.40059 703.5,1081.40059 Z M709.00161,1081.40059 C707.906808,1081.40059 707.019011,1080.50819 707.019011,1079.41799 C707.019011,1078.32319 707.906808,1077.43079 709.00161,1077.43079 C710.096412,1077.43079 710.984209,1078.32319 710.984209,1079.41799 C710.984209,1080.50819 710.096412,1081.40059 709.00161,1081.40059 Z" id="Shape" transform="translate(703.500000, 1081.828390) scale(-1, 1) translate(-703.500000, -1081.828390) "></path>
+          </g>
+      </g>
+    </svg>
+      Задать вопрос
+    </div>
+
+    <div class="yn_footer yn_footer__qs">
+
+<script>
+  function addLike(elem) {
+    var img = $(elem).find('img');
+    var count = parseInt($(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text());
+    var question_id = $(elem).closest('.yn_qs').attr('data-id');
+    if(img.hasClass('action_like')) {
+      axios
+  		.post('index.php?route=common/question/removeLike', 'question_id='+question_id)
+  		.then(response => {
+        img.attr('src', 'catalog/view/theme/ym/image/yellow_like.svg').removeClass('action_like').removeClass('yn_qs__like');
+        $(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text(count-1);
+  		})
+  		.catch(function (error) {
+  			console.log(error);
+  		});
+    } else {
+      axios
+  		.post('index.php?route=common/question/addLike', 'question_id='+question_id)
+  		.then(response => {
+        img.attr('src', 'catalog/view/theme/ym/image/like_action.svg').addClass('action_like').addClass('yn_qs__like');
+        $(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text(count+1);
+  		})
+  		.catch(function (error) {
+  			console.log(error);
+  		});
+    }
+  }
+
+  function addDislike(elem) {
+    var img = $(elem).find('img');
+    var count = parseInt($(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text());
+    var question_id = $(elem).closest('.yn_qs').attr('data-id');
+    if(img.hasClass('action_dislike')) {
+      axios
+  		.post('index.php?route=common/question/removeDislike', 'question_id='+question_id)
+  		.then(response => {
+        img.attr('src', 'catalog/view/theme/ym/image/yellow_dislike.svg').removeClass('action_dislike');
+        $(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text(count-1);
+  		})
+  		.catch(function (error) {
+  			console.log(error);
+  		});
+    } else {
+
+      axios
+  		.post('index.php?route=common/question/addDislike', 'question_id='+question_id)
+  		.then(response => {
+        img.attr('src', 'catalog/view/theme/ym/image/dislike_action.svg').addClass('action_dislike');
+        $(elem).closest('.yn_qs__feedback').find('.yn_qs__counter').text(count+1);
+  		})
+  		.catch(function (error) {
+  			console.log(error);
+  		});
+    }
+  };
+
+  setInterval(function() {
+    $('.yn_overflow').load(window.location.href + ' .yn_overflow > *');
+  }, 30000);
+</script>
+{{ footer }}
