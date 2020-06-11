@@ -1,0 +1,269 @@
+{{ header }}
+
+<header class="yn_header">
+  <div class="yn_container">
+  <div class="yn__row">
+     <div class="yn_logo"><img src="catalog/view/theme/ym/image/logo.svg" alt="логотип"></div>
+    <div>
+    <a href="{{ network_link }}" class="nt_link">
+      <svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g transform="translate(-292.000000, -19.000000)" fill="#FFFFFF" fill-rule="nonzero" class="nt_svg">
+                <path d="M341.750521,43.9776042 C341.750521,57.5765625 330.730208,68.6052083 317.124479,68.6052083 C303.533333,68.6052083 292.505208,57.5765625 292.505208,43.9776042 C292.505208,30.3880208 303.533333,19.359375 317.124479,19.359375 C330.730208,19.3588542 341.750521,30.3880208 341.750521,43.9776042 Z M311.930208,46.0614583 L320.280729,52.1505208 C319.045312,54.6890625 320.111458,57.7458333 322.657812,58.9807292 C325.196875,60.2 328.252604,59.1427083 329.479687,56.6036458 C330.707292,54.05625 329.649479,51.0005208 327.110417,49.7739583 C325.189062,48.8479167 322.896875,49.2104167 321.352604,50.6760417 L313.010417,44.5875 C313.705208,43.2447917 313.874479,41.69375 313.48125,40.2354167 L322.109896,36.4463542 C323.352604,38.0364583 325.651562,38.30625 327.234375,37.0640625 C328.824479,35.8135417 329.101042,33.5213542 327.852083,31.9317708 C326.608854,30.3494792 324.309896,30.071875 322.727083,31.321875 C321.678125,32.1401042 321.167708,33.4677083 321.376562,34.7796875 L312.747917,38.5609375 C310.957812,35.7286458 307.222396,34.903125 304.397917,36.6854167 C301.573437,38.4838542 300.739583,42.2114583 302.530208,45.0427083 C304.313542,47.8526042 308.056771,48.6932292 310.873958,46.9104167 C311.259375,46.6713542 311.613542,46.378125 311.930208,46.0614583 Z" id="Shape"></path>
+            </g>
+        </g>
+      </svg>
+
+      {% if not auth %}
+        <div class="nt_plus">
+          <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-336.000000, -20.000000)" fill="#FFFFFF">
+                    <polygon points="343.176426 27.340361 343.176426 31.9535456 341.045574 31.9535456 341.045574 27.340361 336.696 27.340361 336.696 25.4511521 341.045574 25.4511521 341.045574 20.816 343.176426 20.816 343.176426 25.4511521 347.526 25.4511521 347.526 27.340361"></polygon>
+                </g>
+            </g>
+          </svg>
+        </div>
+      {% else %}
+        <div class="nt_plus">
+          {{ count_contacts }}
+        </div>
+      {% endif %}
+    </a>
+    </div>
+  </div>
+    <h1>Программа конференции</h1>
+  </div>
+</header>
+
+<main class="yn_content">
+
+  <div class="yn_container">
+
+    {% if reports %}
+
+      {% for report in reports %}
+      <div class="yn_card">
+        <div class="yn_card__time">{{ report.time }}</div>
+        <div class="yn_card__title js-title">
+          {{ report.name }}
+          <div class="yn_card__toggle"></div>
+        </div>
+
+        <div class="yn_user">
+          <div class="yn_user__thumb">
+            <img src="{{ report.speaker_image }}" alt="">
+          </div>
+          <div class="yn_user__info">
+            <div class="yn_user__title">{{ report.speaker_name }}</div>
+            <div class="yn_user__position">{{ report.speaker_position }}</div>
+          </div>
+        </div>
+
+        <div class="yn_collapse">
+
+        <div class="yn_rating" data-report-id="{{ report.report_id }}">
+          {% if report.ratings %}
+            {% for rating in report.ratings %}
+            <div class="yn_rating__item" data-rating-id="{{ rating.rating_id }}" {% if rating.rating_id == '1' %} style="display:none" {% endif %}>
+              <div class="yn_rating__title">
+				{{ rating.name }}
+			  </div>
+              <div class="yn_rating__rating">
+                {% set clear = '' %}
+
+                {% if rating.number %}
+                  {% if rating.number == 5 %}
+
+                    {% for i in 1..5 %}
+                      <div class="yn_rating__star full-star">
+                        <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                        <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% for i in 1..rating.number %}
+                      <div class="yn_rating__star full-star">
+                        <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                          <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+                      </div>
+                    {% endfor %}
+
+                    {% for i in 1..(5-rating.number) %}
+                      <div class="yn_rating__star empty-star">
+                        <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                        <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+                      </div>
+                    {% endfor %}
+
+                  {% endif %}
+                  {% set clear = 'active' %}
+                {% else %}
+                  {% for i in 1..5 %}
+                    <div class="yn_rating__star empty-star">
+                      <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+                      <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+                <div class="yn_rating__clear {{ clear }}" onclick="clearRating(this)">
+                  <span class="yn_rating__del"></span>
+                </div>
+
+
+              </div>
+            </div>
+
+            {% endfor %}
+
+          {% endif %}
+
+        </div>
+
+        <div class="yn_comment" data-report-id="{{ report.report_id }}">
+          <label class="yn_comment__label">Комментарий</label>
+          <textarea class="yn_comment__textarea" placeholder="Оставить комментарий"></textarea>
+          <button class="yn_comment__button">Отправить</button>
+        </div>
+
+        <div class="yn_ts__tn js_slideup">Свернуть</div>
+        </div>
+      </div>
+      {% endfor %}
+
+    {% endif %}
+
+    <div class="yn_card yn_card__comment">
+      <div class="yn_card__subtitle">Моя оценка конференции</div>
+
+      <div class="yn_rating__item" data-rating-id="0">
+        <div class="yn_rating__rating">{% set total_clear = '' %}
+        {% if total_rating %}
+          {% if total_rating == 5 %}
+
+            {% for i in 1..5 %}
+              <div class="yn_rating__star full-star">
+                <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+              </div>
+            {% endfor %}
+          {% else %}
+            {% for i in 1..total_rating %}
+              <div class="yn_rating__star full-star">
+                <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                  <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+              </div>
+            {% endfor %}
+
+            {% for i in 1..(5-total_rating) %}
+              <div class="yn_rating__star empty-star">
+                <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+                <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+              </div>
+            {% endfor %}
+
+          {% endif %}
+
+          {% set total_clear = 'active' %}
+
+        {% else %}
+          {% for i in 1..5 %}
+            <div class="yn_rating__star empty-star">
+              <img src="catalog/view/theme/ym/image/empty_star.svg" alt="" class="empty-star__item">
+              <img src="catalog/view/theme/ym/image/full_star.svg" alt="" class="full-star__item">
+            </div>
+          {% endfor %}
+        {% endif %}
+
+      <div class="yn_rating__clear {{ total_clear }} " onclick="clearRating(this)">
+          <span class="yn_rating__del"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="yn_comment" data-report-id="0">
+        <label class="yn_comment__label">Комментарий</label>
+        <textarea class="yn_comment__textarea" placeholder="Оставить комментарий"></textarea>
+        <button class="yn_comment__button">Отправить</button>
+      </div>
+    </div>
+  </div>
+  <div class="yn_footer">
+
+<script>
+
+$('.yn_rating__star').on('click touchstart', function(){
+  var elem = $(this);
+  var report_id = elem.closest('.yn_rating').attr('data-report-id');
+  var rating_id = elem.closest('.yn_rating__item').attr('data-rating-id');
+  var number = elem.index() + 1;
+    var clear_btn = elem.closest('.yn_rating__rating').find('.yn_rating__clear');
+
+  if($(this).is('[data-total-report]') ) {
+    var report_id = 0;
+  } else {
+    var report_id = elem.closest('.yn_rating').attr('data-report-id');
+  }
+  axios
+  .post('index.php?route=common/report/updateRating', 'report_id='+report_id+'&rating_id='+rating_id+'&number='+number)
+  .then(response => {
+      elem.closest('.yn_rating__rating').children('.yn_rating__star').each(function(){
+        if(($(this).index() + 1) <= number) {
+          $(this).removeClass('empty-star').addClass('full-star');
+        } else {
+          $(this).removeClass('full-star').addClass('empty-star');
+        }
+      });
+      if(!clear_btn.hasClass('active')) {
+        clear_btn.addClass('active');
+      }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+});
+
+  $('.yn_comment__button').click(function(){
+    $('.yn_comment__textarea').removeClass('error');
+    var report_id = $(this).closest('.yn_comment').attr('data-report-id');
+    var textarea = $(this).closest('.yn_comment').find('.yn_comment__textarea');
+
+    if(textarea.val() == '') {
+      textarea.addClass('error');
+    } else {
+      axios
+      .post('index.php?route=common/report/sendComment', 'report_id='+report_id+'&comment='+textarea.val())
+      .then(response => {
+        textarea.val('');
+        $(this).text('Отправлено').addClass('green-bg');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+  });
+
+  function clearRating(btn) {
+    var elem = $(btn);
+    if(elem.hasClass('active')) {
+      var report_id = elem.closest('.yn_rating').attr('data-report-id');
+      var rating_id = elem.closest('.yn_rating__item').attr('data-rating-id');
+      axios
+      .post('index.php?route=common/report/clearRating', 'report_id='+report_id+'&rating_id='+rating_id)
+      .then(response => {
+
+        elem.closest('.yn_rating__rating').children('.yn_rating__star').each(function(){
+          $(this).removeClass('full-star').addClass('empty-star');
+        });
+
+        elem.closest('.yn_rating__item').find('.yn_rating__clear').removeClass('active');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+  }
+</script>
+
+{{ footer }}
