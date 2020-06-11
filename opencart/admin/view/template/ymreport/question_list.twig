@@ -1,0 +1,179 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>Вопросы</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    {% if questions %}
+      <div class="qs__wrap">
+       {% for question in questions %}
+        <div class="yn_qs__group">
+
+       <div class="yn_qs" data-id="{{ question.qsid }}">
+
+           <div class="yn_qs__row">
+             <div class="yn_qs__text">{{ question.name }}</div>
+
+             <div class="yn_qs__feedbacklist">
+               <div class="yn_qs__feedback yn_qs__alike">
+                               <img src="view/image/yellow_like.svg" alt="" class="yn_qs__like">
+                             <div class="yn_qs__counter">{{ question.qslike }}</div>
+               </div>
+
+               <div class="yn_qs__feedback yn_qs__dislike">
+                             <img src="view/image/yellow_dislike.svg" alt="">
+                           <div class="yn_qs__counter">{{ question.qsdislike }}</div>
+               </div>
+             </div>
+           </div>
+
+           <div class="yn_qs__button">
+
+         <div class="yn_qs__add
+                     {% if question.yk_comment %} hide {% endif %} action-openform"
+                     data-author="1"
+                     onclick="openForm(this)">
+                     Яндекс.Касса отвечает
+                     </div>
+
+         <div class="yn_qs__add {% if question.ym_comment %} hide {% endif %} action-openform"
+              data-author="2"
+              onclick="openForm(this)">
+              Яндекс.Маркет отвечает</div>
+
+           </div>
+         </div>
+
+         <div class="yn_qs__form">
+          <form>
+            <div class="yn_qs__form__title">Яндекс.Касса отвечает</div>
+            <textarea name="text" placeholder="Текст ответа" class="yn_qs__form_textarea" rows="4" data-toggle="summernote" data-lang="{{ summernote }}" required></textarea>
+            <input type="hidden" name="author_id" value="1" class="yn_qs__form__author">
+            <input type="hidden" name="question_id" value="{{ question.qsid }}" class="yn_qs__form__id">
+            <div class="yn_qs__form_action">
+                <div class="yn_qs__btn action-send" onclick="addComment(this)">Сохранить</div>
+                <div class="yn_qs__btn action-close" onclick="closeForm(this)">Закрыть</div>
+            </div>
+          </form>
+         </div>
+         </div>
+
+
+         {% if question.comments %}
+          <div class="comments">
+
+            {% for comment in question.comments %}
+              <div class="comment">
+                <span>{{ comment.name }}:</span>
+                <!--<div class="comment__del"></div>-->
+                <div class="comment__text">
+                  <textarea name="text" class="comment__textarea" rows="5" data-toggle="summernote" data-lang="{{ summernote }}">{{ comment.text }}</textarea>
+                </div>
+
+                <div class="comment__action">
+                  <div class="comment__edit" onclick="editComment(this, {{ comment.comment_id }})">Изменить</div>
+                  <div class="comment__delete" onclick="deleteComment({{ comment.comment_id }})">Удалить</div>
+                </div>
+
+              </div>
+            {% endfor %}
+          </div>
+
+         {% endif %}
+
+      {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+
+<script>
+  function closeForm(elem) {
+    $(elem).closest('.yn_qs__form').slideToggle().removeClass('open');
+  }
+
+  function openForm(elem) {
+    var form = $(elem).closest('.yn_qs__group').find('.yn_qs__form'),
+        title = $(elem).text(),
+        author_id = $(elem).attr('data-author');
+
+    if(!form.hasClass('open')) {
+      form.slideToggle().addClass('open');
+    }
+    form.find('.yn_qs__form_textarea').val('');
+    form.find('.yn_qs__form__author').val(author_id);
+    form.find('.yn_qs__form__title').text(title);
+  }
+
+  function addComment(elem) {
+    var form = $(elem).closest('.yn_qs__form').find('form');
+    var text = form.find('.yn_qs__form_textarea').val();
+    form.find('.yn_qs__form_textarea').removeClass('error');
+    if(text.length == 0) {
+      form.find('.yn_qs__form_textarea').addClass('error');
+    } else {
+      var data = form.serialize();
+      $.ajax({
+				url: 'index.php?route=ymreport/question/addComment&user_token={{ user_token }}',
+        data: data,
+				type: 'post',
+				success: function(json) {
+          if(json['success']) {
+            location.reload();
+          }
+				}
+			});
+    }
+  }
+
+  function deleteComment(comment_id) {
+    $.ajax({
+      url: 'index.php?route=ymreport/question/deleteComment&user_token={{ user_token }}',
+      data: 'comment_id='+comment_id,
+      type: 'post',
+      success: function(json) {
+
+        if(json['success']) {
+          $('.qs__wrap').load(window.location.href + ' .qs__wrap > *');
+        }
+
+      }
+    });
+  }
+
+  function editComment(elem, comment_id) {
+    var text = $(elem).closest('.comment').find('.comment__textarea').val();
+    $.ajax({
+      url: 'index.php?route=ymreport/question/editComment&user_token={{ user_token }}',
+      data: 'text='+text+'&comment_id='+comment_id,
+      type: 'post',
+      success: function(json) {
+        if(json['success']) {
+          location.reload();
+        }
+      }
+    });
+  }
+</script>
+{{ footer }}
